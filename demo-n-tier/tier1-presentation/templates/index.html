@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-Tier Architecture Demo - Quản lý Sản phẩm</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .products-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+        
+        .error-message ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .products-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .product-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .product-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .product-info h3 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+        
+        .product-info p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .product-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .empty-state p {
+            font-size: 16px;
+        }
+        
+        .service-status {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ N-Tier Architecture Demo</h1>
+            <p>Quản lý Sản phẩm - Presentation Layer (Port 5000)</p>
+        </div>
+        
+        <div class="content">
+            {% if error %}
+            <div class="error-message">
+                <strong>⚠️ Lỗi:</strong>
+                {% if error is string %}
+                    <p>{{ error }}</p>
+                {% elif error is iterable %}
+                    <ul>
+                        {% for err in error %}
+                            <li>{{ err }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>{{ error }}</p>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <div class="form-section">
+                <h2>➕ Thêm sản phẩm mới</h2>
+                <form method="POST" action="/products">
+                    <div class="form-group">
+                        <label for="name">Tên sản phẩm:</label>
+                        <input type="text" id="name" name="name" required placeholder="Nhập tên sản phẩm (ít nhất 3 ký tự)">
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Giá (VND):</label>
+                        <input type="number" id="price" name="price" step="0.01" min="0.01" required placeholder="Nhập giá sản phẩm">
+                    </div>
+                    <button type="submit" class="btn">Thêm sản phẩm</button>
+                </form>
+            </div>
+            
+            <div class="products-section">
+                <h2>📦 Danh sách sản phẩm</h2>
+                {% if products and products|length > 0 %}
+                    <div class="products-list">
+                        {% for product in products %}
+                        <div class="product-card">
+                            <div class="product-info">
+                                <h3>{{ product.name }}</h3>
+                                <p>ID: {{ product.id }} | Tạo lúc: {{ product.created_at }}</p>
+                            </div>
+                            <div class="product-price">
+                                {{ "{:,.0f}".format(product.price) }} ₫
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <p>📭 Chưa có sản phẩm nào. Hãy thêm sản phẩm đầu tiên!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
