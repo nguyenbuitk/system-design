@@ -1,26 +1,26 @@
 # Monolith Demo - Case Study 1: Startup
 
-Demo minh họa Monolith architecture cho startup - tất cả features trong một ứng dụng duy nhất.
+Demo using monolith architecture for a startup - all features are built in a single application
 
 ## Mục tiêu
 
-- Hiểu Monolith architecture
-- Thấy được sự đơn giản của monolith
-- So sánh với Microservices (sẽ demo sau)
+- Understand monolith architecture
+- Recognize the simplicity of monolithc architecture
+- Compare with microservices
 
 ## Quick Start
 
-### 1. Cài đặt dependencies
+### 1. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Chạy demo
+### 2. Run demo
 ```bash
 python app.py
 ```
 
-### 3. Truy cập
+### 3. Access
 - Web UI: http://localhost:5000
 - API: http://localhost:5000/api/products
 
@@ -36,18 +36,18 @@ Monolith Application (Single Process)
 Shared Database (SQLite)
 ```
 
-**Đặc điểm:**
-- Tất cả features trong một codebase
-- Một database cho tất cả
-- Deploy một lần cho toàn bộ app
-- Giao tiếp trong process (nhanh)
+**Features:**
+- All features are built into a single codebase
+- Single database for the entire application
+- Deploy once for entire app
+- Components communicate in-process (fast)
 
 ## Features
 
-1. **User Management**: Đăng ký, đăng nhập
-2. **Product Catalog**: Xem, thêm sản phẩm
-3. **Order Processing**: Đặt hàng
-4. **Payment**: Thanh toán
+1. **User Management**
+2. **Product Catalog**
+3. **Order Processing**
+4. **Payment**
 
 ## So sánh với Microservices
 
@@ -69,4 +69,3 @@ demo-monolith/
 ├── requirements.txt
 └── README.md
 ```
-
