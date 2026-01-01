@@ -2,27 +2,14 @@
 
 Demo using monolith architecture for a startup - all features are built in a single application
 
-## Mục tiêu
-
-- Understand monolith architecture
-- Recognize the simplicity of monolithc architecture
-- Compare with microservices
-
 ## Quick Start
 
 ### 1. Install dependencies
 ```bash
 pip install -r requirements.txt
-```
-
-### 2. Run demo
-```bash
 python app.py
 ```
 
-### 3. Access
-- Web UI: http://localhost:5000
-- API: http://localhost:5000/api/products
 
 ## Architecture
 
@@ -42,30 +29,45 @@ Shared Database (SQLite)
 - Deploy once for entire app
 - Components communicate in-process (fast)
 
-## Features
 
-1. **User Management**
-2. **Product Catalog**
-3. **Order Processing**
-4. **Payment**
+# Disadvantages of current app
+1. Scaling
+```bash
+Problem: order procesing need to scale due to high traffic
+-> current solution: scale the entire application
+-> result: must scale user, product, payment also (unnecessary)
+-> higher cost and wasted resources
 
-## So sánh với Microservices
-
-| Feature | Monolith (này) | Microservices |
-|---------|---------------|---------------|
-| **Deployment** | 1 app | Nhiều services |
-| **Database** | 1 database | Database per service |
-| **Communication** | In-process (nhanh) | Network (chậm hơn) |
-| **Complexity** | Đơn giản | Phức tạp |
-| **Cost** | Thấp | Cao |
-
-## Cấu trúc
-
+If components are seperate, we can increase x10 resource order, and x2 resource payment for example.
 ```
-demo-monolith/
-├── app.py              # Main application (tất cả features)
-├── database/
-│   └── app.db         # SQLite database
-├── requirements.txt
-└── README.md
+
+2. Deployment
+```bash
+Problem: Fix a small bug in Payment
+-> Must redeploy the entire app
+-> Risks: 
+    maybe affect user, product, order.
+    downtime for the entire system
+    complex rollback
 ```
+
+3. Technology lock-in
+```bash
+Problem: want to use Node.js for Payment (integrate with payment gateway)
+-> current: Everything must use Python/Flask
+-> Cannot: Using different tech stack for each feature
+```
+
+4. Database bottleneck
+```bash
+Problem: All features use the same database
+When: Order service query database at a high rate -> database becomes slow
+-> Affects user, product, payment query as well
+```
+
+5. Others
+```bash
+- When we just wanted to test Order process, must testing must test the entire database
+- Cosebase grow up -> hard to maintain, and add new features
+```
+

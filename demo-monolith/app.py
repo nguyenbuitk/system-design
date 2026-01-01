@@ -41,7 +41,7 @@ def init_db():
             status TEXT DEFAULT 'PENDING',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id),
-            FOREIGN KEY (product_id) REFERENCES productsS(id)
+            FOREIGN KEY (product_id) REFERENCES products(id)
         )
     ''')
     
