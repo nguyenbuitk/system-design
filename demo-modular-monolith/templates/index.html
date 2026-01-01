@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modular Monolith Demo</title>
+    <style>
+        body { font-family: Arial; max-width: 900px; margin: 50px auto; padding: 20px; }
+        .section { background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        h2 { color: #333; }
+        input, select { padding: 8px; margin: 5px; width: 200px; }
+        button { padding: 8px 15px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #5568d3; }
+        .item { padding: 10px; margin: 5px 0; background: white; border-radius: 4px; }
+        .info-box { background: #e7f3ff; border-left: 4px solid #2196F3; padding: 15px; margin: 20px 0; }
+        .module-structure { background: #f0f0f0; padding: 15px; margin: 10px 0; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>Modular Monolith Application Demo</h1>
+    <p><strong>Case Study:</strong> Code organized into independent modules, still runs as one application</p>
+    
+    <div class="info-box">
+        <h3>Modular Monolith Characteristics:</h3>
+        <ul>
+            <li>Code organized into independent modules (user, product, order, payment)</li>
+            <li>Each module has its own service and routes</li>
+            <li>Can change a module without affecting others</li>
+            <li>Still runs as one application (single deploy)</li>
+            <li>Still uses one database (but organized by modules)</li>
+            <li>Reduces complexity compared to monolith</li>
+        </ul>
+    </div>
+
+    <div class="module-structure">
+        <strong>Module Structure:</strong><br>
+        modules/<br>
+        &nbsp;&nbsp;user/ (service.py, routes.py)<br>
+        &nbsp;&nbsp;product/ (service.py, routes.py)<br>
+        &nbsp;&nbsp;order/ (service.py, routes.py)<br>
+        &nbsp;&nbsp;payment/ (service.py, routes.py)<br>
+        shared/ (database.py)
+    </div>
+    
+    <div class="section">
+        <h2>1. User Management (Module: user)</h2>
+        <form onsubmit="createUser(event)">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="name" placeholder="Name" required>
+            <button type="submit">Create User</button>
+        </form>
+        <div id="users"></div>
+    </div>
+    
+    <div class="section">
+        <h2>2. Product Catalog (Module: product)</h2>
+        <form onsubmit="createProduct(event)">
+            <input type="text" name="name" placeholder="Product Name" required>
+            <input type="number" name="price" placeholder="Price" step="0.01" required>
+            <button type="submit">Add Product</button>
+        </form>
+        <div id="products"></div>
+    </div>
+    
+    <div class="section">
+        <h2>3. Order Processing (Module: order)</h2>
+        <form onsubmit="createOrder(event)">
+            <select name="user_id" id="userSelect" required>
+                <option value="">Select User</option>
+            </select>
+            <select name="product_id" id="productSelect" required>
+                <option value="">Select Product</option>
+            </select>
+            <input type="number" name="quantity" placeholder="Quantity" value="1" required>
+            <button type="submit">Create Order</button>
+        </form>
+        <div id="orders"></div>
+    </div>
+    
+    <div class="section">
+        <h2>4. Payment (Module: payment)</h2>
+        <form onsubmit="createPayment(event)">
+            <select name="order_id" id="orderSelect" required>
+                <option value="">Select Order</option>
+            </select>
+            <button type="submit">Process Payment</button>
+        </form>
+        <div id="payments"></div>
+    </div>
+    
+    <script>
+        function createUser(e) {
+            e.preventDefault();
+            fetch('/api/users', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    email: e.target.email.value,
+                    name: e.target.name.value
+                })
+            }).then(() => loadData());
+        }
+        
+        function createProduct(e) {
+            e.preventDefault();
+            fetch('/api/products', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    name: e.target.name.value,
+                    price: parseFloat(e.target.price.value)
+                })
+            }).then(() => loadData());
+        }
+        
+        function createOrder(e) {
+            e.preventDefault();
+            fetch('/api/orders', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    user_id: parseInt(e.target.user_id.value),
+                    product_id: parseInt(e.target.product_id.value),
+                    quantity: parseInt(e.target.quantity.value)
+                })
+            }).then(() => loadData());
+        }
+        
+        function createPayment(e) {
+            e.preventDefault();
+            fetch('/api/payments', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    order_id: parseInt(e.target.order_id.value)
+                })
+            }).then(() => loadData());
+        }
+        
+        function loadData() {
+            fetch('/api/users').then(r => r.json()).then(data => {
+                document.getElementById('users').innerHTML = data.map(u => 
+                    `<div class="item">${u.name} (${u.email})</div>`
+                ).join('');
+                const select = document.getElementById('userSelect');
+                select.innerHTML = '<option value="">Select User</option>' + 
+                    data.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+            });
+            
+            fetch('/api/products').then(r => r.json()).then(data => {
+                document.getElementById('products').innerHTML = data.map(p => 
+                    `<div class="item">${p.name} - $${p.price}</div>`
+                ).join('');
+                const select = document.getElementById('productSelect');
+                select.innerHTML = '<option value="">Select Product</option>' + 
+                    data.map(p => `<option value="${p.id}">${p.name} - $${p.price}</option>`).join('');
+            });
+            
+            fetch('/api/orders').then(r => r.json()).then(data => {
+                document.getElementById('orders').innerHTML = data.map(o => 
+                    `<div class="item">Order #${o.id}: ${o.product_name} x${o.quantity} = $${o.total} (${o.status})</div>`
+                ).join('');
+                const select = document.getElementById('orderSelect');
+                select.innerHTML = '<option value="">Select Order</option>' + 
+                    data.filter(o => o.status === 'PENDING').map(o => 
+                        `<option value="${o.id}">Order #${o.id} - $${o.total}</option>`
+                    ).join('');
+            });
+            
+            fetch('/api/payments').then(r => r.json()).then(data => {
+                document.getElementById('payments').innerHTML = data.map(p => 
+                    `<div class="item">Payment #${p.id}: $${p.amount} (${p.status})</div>`
+                ).join('');
+            });
+        }
+        
+        loadData();
+        setInterval(loadData, 2000);
+    </script>
+</body>
+</html>
+
