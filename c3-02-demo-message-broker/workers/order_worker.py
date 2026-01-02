@@ -11,8 +11,9 @@ from shared.db import get_db_connection
 from shared.config import VALIDATING_INVENTORY_TIME, CALCULATING_SHIPPING_TIME, SENDING_CONFIRMATION_EMAIL_TIME, UPDATING_ANALYTICS_TIME
 
 def connect_rabbitmq():
+    print(f'connecting to: {RABBITMQ_HOST}')
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters('localhost')
+        pika.ConnectionParameters(f'{RABBITMQ_HOST}')
     )
     return connection, connection.channel()
 
