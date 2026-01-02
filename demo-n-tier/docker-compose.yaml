@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  be:
+    build:
+      context: .
+      dockerfile: Dockerfile-tier2
+    container_name: business
+    volumes:
+      - ./tier3-database:/app/tier3-database
+    networks:
+      - n-tier-net
+  fe:
+    build:
+      context: .
+      dockerfile: Dockerfile-tier1
+    container_name: presentation
+    ports:
+      - "5000:5000"
+    environment:
+      - BUSINESS_SERVICE_URL=http://be:5001
+    networks:
+      - n-tier-net
+
+networks:
+  n-tier-net:
+    driver: bridge

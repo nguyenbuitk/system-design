@@ -1,0 +1,11 @@
+FROM python:3.13-alpine
+
+WORKDIR /app
+
+COPY shared /app/shared
+COPY tier2-business/business_service.py .
+COPY tier2-business/requirements.txt .
+
+RUN pip install -r requirements.txt
+
+CMD ["python", "business_service.py"]
