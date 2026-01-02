@@ -18,4 +18,4 @@ RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST', 'localhost')
 ORDER_QUEUE = 'order_processing'
 
 # Application settings
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 'yes')

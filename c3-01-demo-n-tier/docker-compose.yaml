@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile-tier2
     container_name: business
-    restart: unless-stopped
+    # restart: unless-stopped
     volumes:
       - ./tier3-database:/app/tier3-database
     networks:
@@ -16,7 +16,7 @@ services:
       context: .
       dockerfile: Dockerfile-tier1
     container_name: presentation
-    restart: unless-stopped
+    # restart: unless-stopped
     ports:
       - "5000:5000"
     environment:
