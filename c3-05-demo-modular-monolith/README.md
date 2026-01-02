@@ -31,8 +31,7 @@ Shared Database (SQLite)
 
 ### Benefits of Modular Monolith
 1. **Independent Modules**
-   - Each module (user, product, order, payment) is self-contained
-   - Has its own service layer and routes
+   - Each module (user, product, order, payment) has its own service layer and routes
    - Can be modified without affecting other modules
 
 2. **Reduced Coupling**
