@@ -11,10 +11,6 @@ import os
 # Add shared folder to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from shared.config import BUSINESS_SERVICE_URL, DEBUG
-if os.environ.get('BUSINESS_SERVICE_URL'):
-    BUSINESS_SERVICE_URL = os.environ.get('BUSINESS_SERVICE_URL')
-    
-DEBUG = os.environ.get('DEBUG')
 
 print("BUSINESS_SERVICE_URL: ", BUSINESS_SERVICE_URL)
 app = Flask(__name__)

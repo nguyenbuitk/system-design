@@ -8,4 +8,7 @@ COPY tier2-business/requirements.txt .
 
 RUN pip install -r requirements.txt
 
+# for declare the port that service listen. just metadata
+# If not declare, all behavior will be the same
+EXPOSE 5001
 CMD ["python", "business_service.py"]
