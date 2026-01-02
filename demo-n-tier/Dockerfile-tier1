@@ -1,0 +1,12 @@
+FROM python:3.13-alpine
+
+WORKDIR /app
+
+COPY shared /app/shared
+COPY tier1-presentation/requirements.txt .
+COPY tier1-presentation/app.py .
+COPY tier1-presentation/templates ./templates
+
+RUN pip install -r requirements.txt
+
+CMD ["python", "app.py"]
