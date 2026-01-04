@@ -13,11 +13,6 @@ venv/
 env/
 ENV/
 
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
 # IDE
 .vscode/
 .idea/
@@ -27,5 +22,4 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
-
 

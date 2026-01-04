@@ -35,7 +35,7 @@ def main():
         setup_exchange(channel)
         print("[OK] Connected to RabbitMQ")
     except Exception as e:
-        print(f"[ERROR] {e}")
+        print(f"[ERROR] connected to RabbitMQ {e} ")
         return
     
     result = channel.queue_declare(queue='', exclusive=True)

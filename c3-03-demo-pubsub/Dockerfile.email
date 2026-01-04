@@ -1,0 +1,14 @@
+FROM python:3.13-alpine
+
+WORKDIR /app
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+COPY shared /app/shared
+COPY subscribers/email_subscriber.py email_subscriber.py
+COPY subscribers/requirements.txt requirements.txt 
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["python", "email_subscriber.py"]

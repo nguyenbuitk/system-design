@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - pubsub-net
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  publisher:
+    build:
+      context: .
+      dockerfile: Dockerfile.publisher
+    container_name: publisher
+    restart: unless-stopped
+    networks:
+      - pubsub-net
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  analytics_subscriber:
+    build:
+      context: .
+      dockerfile: Dockerfile.analytics
+    container_name: analytics_subscriber
+    restart: unless-stopped
+    networks:
+      - pubsub-net
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  email_subscriber:
+    build:
+      context: .
+      dockerfile: Dockerfile.email
+    container_name: email_subscriber
+    restart: unless-stopped
+    networks:
+      - pubsub-net
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+volumes:
+  rabbitmq-data:
+networks:
+  pubsub-net:
+    driver: bridge

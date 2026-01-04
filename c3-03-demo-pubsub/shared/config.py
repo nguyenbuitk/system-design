@@ -1,12 +1,13 @@
+import os
 # RabbitMQ configuration
-RABBITMQ_HOST = 'localhost'
-EXCHANGE_NAME = 'events'
-EXCHANGE_TYPE = 'topic'
+RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST')
+EXCHANGE_NAME = os.environ.get('EXCHANGE_NAME')
+EXCHANGE_TYPE = os.environ.get('EXCHANGE_TYPE')
 
 # Event types
-EVENT_USER_CREATED = 'user.created'
-EVENT_USER_LOGIN = 'user.login'
-EVENT_USER_UPDATED = 'user.updated'
-EVENT_ORDER_CREATED = 'order.created'
-EVENT_PAYMENT_COMPLETED = 'payment.completed'
-EVENT_PAYMENT_FAILED = 'payment.failed'
+EVENT_USER_CREATED = os.environ.get('EVENT_USER_CREATED')
+EVENT_USER_LOGIN = os.environ.get('EVENT_USER_LOGIN')
+EVENT_USER_UPDATED = os.environ.get('EVENT_USER_UPDATED')
+EVENT_ORDER_CREATED = os.environ.get('EVENT_ORDER_CREATED')
+EVENT_PAYMENT_COMPLETED = os.environ.get('EVENT_PAYMENT_COMPLETED')
+EVENT_PAYMENT_FAILED = os.environ.get('EVENT_PAYMENT_FAILED')

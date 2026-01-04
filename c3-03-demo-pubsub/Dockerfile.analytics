@@ -1,0 +1,14 @@
+FROM python:3.13-alpine
+
+WORKDIR /app
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+COPY shared /app/shared
+COPY subscribers/analytics_subscriber.py analytics_subscriber.py
+COPY subscribers/requirements.txt requirements.txt
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["python", "analytics_subscriber.py"]
