@@ -1,17 +1,24 @@
 from flask import Flask, request, jsonify
 import sqlite3
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
 DB_FILE = 'database/users.db'
 PORT = 5001
+allow_origins = ['http://localhost:5000']
+CORS(app, resources={
+    r"/api/*": {
+        "origins": allow_origins
+    }
+})
 
 def init_db():
     os.makedirs(os.path.dirname(DB_FILE), exist_ok=True)
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS users(
             id INTEGER PRIMARY KEY,
             email TEXT UNIQUE,
             name TEXT,
@@ -33,7 +40,7 @@ def create_user():
     cursor = conn.cursor()
     try:
         cursor.execute(
-            'INSERT INTO users (email, name) VALUES (?, ?)',
+            'INSERT INTO users(email, name) VALUES (?, ?)',
             (data['email'], data['name'])
         )
         user_id = cursor.lastrowid
@@ -43,7 +50,7 @@ def create_user():
         return jsonify({'error': 'Email already exists'}), 400
     finally:
         conn.close()
-
+        
 @app.route('/api/users', methods=['GET'])
 def get_users():
     conn = get_db()
@@ -66,6 +73,5 @@ def health():
 
 if __name__ == '__main__':
     init_db()
-    print(f"\nUser Service running on http://localhost:{PORT}")
+    print(f"\nUser service running on http:localhost:{PORT}")
     app.run(host='0.0.0.0', port=PORT, debug=True)
-
