@@ -3,7 +3,7 @@ import sqlite3
 import os
 import requests
 import sys
-
+from flask_cors import CORS
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 from shared.config import SERVICES
 
@@ -11,6 +11,12 @@ app = Flask(__name__)
 DB_FILE = 'database/payments.db'
 PORT = 5004
 
+allow_origins = ['http://localhost:5000']
+CORS(app, resources={
+    r"/api/*": {
+        "origins": allow_origins
+    }
+})
 def init_db():
     os.makedirs(os.path.dirname(DB_FILE), exist_ok=True)
     conn = sqlite3.connect(DB_FILE)

@@ -1,10 +1,17 @@
 from flask import Flask, request, jsonify
 import sqlite3
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
 DB_FILE = 'database/products.db'
 PORT = 5002
+allow_origins = ['http://localhost:5000']
+CORS(app, resources={
+    r"/api/*": {
+        "origins": allow_origins
+    }
+})
 
 def init_db():
     os.makedirs(os.path.dirname(DB_FILE), exist_ok=True)
