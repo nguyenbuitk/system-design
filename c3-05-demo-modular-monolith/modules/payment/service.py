@@ -10,18 +10,27 @@ class PaymentService:
         
         conn = get_db()
         cursor = conn.cursor()
-        cursor.execute(
-            'INSERT INTO payments (order_id, amount) VALUES (?, ?)',
-            (order_id, order['total'])
-        )
-        payment_id = cursor.lastrowid
         
-        OrderService.update_order_status(order_id, 'PAID')
-        
-        conn.commit()
-        conn.close()
-        
-        return {'id': payment_id, 'amount': order['total'], 'status': 'COMPLETED'}
+        try:
+            # Insert payment
+            cursor.execute(
+                'INSERT INTO payments (order_id, amount) VALUES (?, ?)',
+                (order_id, order['total'])
+            )
+            payment_id = cursor.lastrowid
+            
+            # Update order status using the same connection
+            cursor.execute('UPDATE orders SET status = ? WHERE id = ?', ('PAID', order_id))
+            
+            # Commit both operations together
+            conn.commit()
+            
+            return {'id': payment_id, 'amount': order['total'], 'status': 'COMPLETED'}
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()
     
     @staticmethod
     def get_all_payments():

@@ -96,7 +96,10 @@
                     email: e.target.email.value,
                     name: e.target.name.value
                 })
-            }).then(() => loadData());
+            }).then(() => {
+                e.target.reset();
+                loadData();
+            });
         }
         
         function createProduct(e) {
@@ -108,7 +111,10 @@
                     name: e.target.name.value,
                     price: parseFloat(e.target.price.value)
                 })
-            }).then(() => loadData());
+            }).then(() => {
+                e.target.reset();
+                loadData();
+            });
         }
         
         function createOrder(e) {
@@ -121,7 +127,11 @@
                     product_id: parseInt(e.target.product_id.value),
                     quantity: parseInt(e.target.quantity.value)
                 })
-            }).then(() => loadData());
+            }).then(() => {
+                // Reset form after successful creation
+                e.target.reset();
+                loadData();
+            });
         }
         
         function createPayment(e) {
@@ -132,10 +142,22 @@
                 body: JSON.stringify({
                     order_id: parseInt(e.target.order_id.value)
                 })
-            }).then(() => loadData());
+            }).then(() => {
+                e.target.reset();
+                loadData();
+            });
         }
         
         function loadData() {
+            // Save current selected values before resetting
+            const userSelect = document.getElementById('userSelect');
+            const productSelect = document.getElementById('productSelect');
+            const orderSelect = document.getElementById('orderSelect');
+            
+            const savedUserId = userSelect.value;
+            const savedProductId = productSelect.value;
+            const savedOrderId = orderSelect.value;
+            
             fetch('/api/users').then(r => r.json()).then(data => {
                 document.getElementById('users').innerHTML = data.map(u => 
                     `<div class="item">${u.name} (${u.email})</div>`
@@ -143,6 +165,10 @@
                 const select = document.getElementById('userSelect');
                 select.innerHTML = '<option value="">Select User</option>' + 
                     data.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+                // Restore selected value if it still exists
+                if (savedUserId && Array.from(select.options).some(opt => opt.value === savedUserId)) {
+                    select.value = savedUserId;
+                }
             });
             
             fetch('/api/products').then(r => r.json()).then(data => {
@@ -152,6 +178,10 @@
                 const select = document.getElementById('productSelect');
                 select.innerHTML = '<option value="">Select Product</option>' + 
                     data.map(p => `<option value="${p.id}">${p.name} - $${p.price}</option>`).join('');
+                // Restore selected value if it still exists
+                if (savedProductId && Array.from(select.options).some(opt => opt.value === savedProductId)) {
+                    select.value = savedProductId;
+                }
             });
             
             fetch('/api/orders').then(r => r.json()).then(data => {
@@ -163,6 +193,10 @@
                     data.filter(o => o.status === 'PENDING').map(o => 
                         `<option value="${o.id}">Order #${o.id} - $${o.total}</option>`
                     ).join('');
+                // Restore selected value if it still exists
+                if (savedOrderId && Array.from(select.options).some(opt => opt.value === savedOrderId)) {
+                    select.value = savedOrderId;
+                }
             });
             
             fetch('/api/payments').then(r => r.json()).then(data => {
@@ -173,7 +207,7 @@
         }
         
         loadData();
-        setInterval(loadData, 2000);
+        setInterval(loadData, 20000);
     </script>
 </body>
 </html>

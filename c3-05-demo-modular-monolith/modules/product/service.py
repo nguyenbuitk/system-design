@@ -21,3 +21,10 @@ class ProductService:
         conn.close()
         return [dict(product) for product in products]
     
+    @staticmethod
+    def get_product_by_id(product_id):
+        conn = get_db()
+        product = conn.execute('SELECT * FROM products WHERE id = ?', (product_id,)).fetchone()
+        conn.close()
+        return dict(product) if product else None
+    

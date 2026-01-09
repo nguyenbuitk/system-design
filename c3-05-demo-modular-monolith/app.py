@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template
 from shared.database import init_db
 from modules.user.routes import user_bp
@@ -18,6 +19,8 @@ def index():
 
 if __name__ == '__main__':
     init_db()
+    DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 'yes')
+    
     print("\nModular Monolith Application")
     print("Running on http://localhost:5000")
     print("\nModule Structure:")
@@ -26,5 +29,7 @@ if __name__ == '__main__':
     print("  - modules/order/")
     print("  - modules/payment/")
     print("  - shared/")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    print(f"  - DEBUG={DEBUG}")
+    
+    app.run(host='0.0.0.0', port=5000, debug=DEBUG)
 
