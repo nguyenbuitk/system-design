@@ -41,6 +41,12 @@ python app.py
 
 Visit: http://localhost:5000
 
+### Option 3: Start with docker
+```bash
+docker compose up -d
+```
+
+
 ## Architecture
 
 ```
@@ -79,40 +85,13 @@ Visit: http://localhost:5000
 | **Complexity** | Low (initially) | Medium | High |
 
 ## Service Details
+1. User Service (Port 5001) - **Database**: `database/users.db`
 
-### 1. User Service (Port 5001)
-- **Database**: `database/users.db`
-- **Endpoints**:
-  - `POST /api/users` - Create user
-  - `GET /api/users` - Get all users
-  - `GET /api/users/<id>` - Get user by ID
-  - `GET /health` - Health check
+2. Product Service (Port 5002) - **Database**: `database/products.db` 
 
-### 2. Product Service (Port 5002)
-- **Database**: `database/products.db`
-- **Endpoints**:
-  - `POST /api/products` - Create product
-  - `GET /api/products` - Get all products
-  - `GET /api/products/<id>` - Get product by ID
-  - `GET /health` - Health check
+3. Order Service (Port 5003) - **Database**: `database/orders.db`
 
-### 3. Order Service (Port 5003)
-- **Database**: `database/orders.db`
-- **Endpoints**:
-  - `POST /api/orders` - Create order (calls Product Service)
-  - `GET /api/orders` - Get all orders (calls User & Product Services)
-  - `GET /api/orders/<id>` - Get order by ID
-  - `PUT /api/orders/<id>/status` - Update order status
-  - `GET /health` - Health check
-- **Service Communication**: Calls Product Service to get product details
-
-### 4. Payment Service (Port 5004)
-- **Database**: `database/payments.db`
-- **Endpoints**:
-  - `POST /api/payments` - Create payment (calls Order Service)
-  - `GET /api/payments` - Get all payments
-  - `GET /health` - Health check
-- **Service Communication**: Calls Order Service to get order details and update status
+4. Payment Service (Port 5004) - **Database**: `database/payments.db`
 
 ## Service Communication
 
@@ -134,23 +113,6 @@ Visit: http://localhost:5000
 4. Order Service saves to orders.db
 
 5. Order Service → Client: { "id": 1, "total": 2999.97, "status": "PENDING" }
-```
-
-### Example: Processing Payment
-
-```
-1. Client → Payment Service: POST /api/payments
-   { "order_id": 1 }
-
-2. Payment Service → Order Service: GET /api/orders/1
-   Response: { "id": 1, "total": 2999.97, "status": "PENDING" }
-
-3. Payment Service saves to payments.db
-
-4. Payment Service → Order Service: PUT /api/orders/1/status
-   { "status": "PAID" }
-
-5. Payment Service → Client: { "id": 1, "amount": 2999.97, "status": "COMPLETED" }
 ```
 
 ## Advantages
@@ -193,7 +155,6 @@ Visit: http://localhost:5000
 2. **Data Consistency**
    - No ACID transactions across services
    - Need eventual consistency
-   - Saga pattern for distributed transactions
 
 3. **Testing Complexity**
    - Need to test service interactions
