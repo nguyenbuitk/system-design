@@ -41,6 +41,8 @@ def get_db():
 
 def get_product_from_service(product_id):
     try:
+        print("product_id: ", product_id)
+        print("SERVICES['product']: ", SERVICES['product'])
         response = requests.get(f"{SERVICES['product']}/api/products/{product_id}", timeout=2)
         if response.status_code == 200:
             return response.json()
@@ -51,11 +53,12 @@ def get_product_from_service(product_id):
 @app.route('/api/orders', methods=['POST'])
 def create_order():
     data = request.json
-    
+    # print data but the logs of container don't show anything ?
+    print("data: ", data)
     product = get_product_from_service(data['product_id'])
     if not product:
         return jsonify({'error': 'Product not found'}), 404
-    
+    print("product: ", product)
     total = product['price'] * data['quantity']
     
     conn = get_db()
