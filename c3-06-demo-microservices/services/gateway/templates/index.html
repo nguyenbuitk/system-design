@@ -93,7 +93,7 @@
 
         function createUser(e) {
             e.preventDefault();
-            fetch(`${SERVICES.user}/api/users`, {
+            fetch('/api/users', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -108,7 +108,7 @@
 
         function createProduct(e) {
             e.preventDefault();
-            fetch(`${SERVICES.product}/api/products`, {
+            fetch('/api/products', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -123,7 +123,7 @@
         
         function createOrder(e) {
             e.preventDefault();
-            fetch(`${SERVICES.order}/api/orders`, {
+            fetch('/api/orders', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
@@ -139,7 +139,7 @@
         
         function createPayment(e) {
             e.preventDefault();
-            fetch(`${SERVICES.payment}/api/payments`, {
+            fetch('/api/payments', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
