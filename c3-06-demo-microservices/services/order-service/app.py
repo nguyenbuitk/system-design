@@ -117,6 +117,12 @@ def update_order_status(order_id):
     conn.close()
     return jsonify({'id': order_id, 'status': data['status']})
 
+@app.route('/api/orders/user/<int:user_id>', methods=['GET'])
+def get_orders_by_user(user_id):
+    conn = get_db()
+    orders = conn.execute('SELECT * FROM orders WHERE user_id = ?', (user_id,)).fetchall()
+    conn.close()
+    return jsonify([dict(order) for order in orders])
 @app.route('/health', methods=['GET'])
 def health():
     return jsonify({'status': 'healthy', 'service': 'order-service'})
